@@ -16,11 +16,13 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+    # TODO: investigate better way to do this
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         tag = Tag.objects.filter(name=self.name.lower())
 
+        self.name = self.name.lower()
+
         if not tag:
-            self.name = self.name.lower()
             return super().save(force_insert, force_update, using, update_fields)
 
         return tag

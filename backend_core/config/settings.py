@@ -11,9 +11,14 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import dj_database_url
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# environ.Env.read_env(os.path.join(BASE_DIR, 'env', '.env'))
+
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
@@ -82,6 +87,12 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+DATABASE_URL = os.environ.get('DB_CONNECTION_STRING', None)
+
+if DATABASE_URL:
+    db_config = dj_database_url.config(default=DATABASE_URL, conn_max_age=500, ssl_require=False)
+    DATABASES['default'].update(db_config)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
