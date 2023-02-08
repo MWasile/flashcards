@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from rest_framework.generics import ListAPIView
 
-# Create your views here.
+from .models import FlashCard
+from .serializers import FlashCardSerializer
+
+
+class FlashCardView(ListAPIView):
+    queryset = FlashCard.objects.all()
+    serializer_class = FlashCardSerializer

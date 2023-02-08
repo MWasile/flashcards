@@ -35,7 +35,7 @@ class Feature(models.Model):
     rating = models.IntegerField(default=0, blank=True)
     tags = models.ManyToManyField('Tag', related_name='%(class)s')
 
-    is_active_flag = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         abstract = True
