@@ -28,7 +28,5 @@ volumes:
   postgres:
 
 networks:
-  backend_core-network:
-    driver: bridge
   backend_core_db-network:
     driver: bridge

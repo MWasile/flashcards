@@ -1,3 +1,19 @@
-from django.shortcuts import render
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 
-# Create your views here.
+from .models import Flashcard
+from .serializers import FlashCardSerializer
+
+
+class FlashCardView(ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = FlashCardSerializer
+
+    def get_queryset(self):
+        rating = self.request.query_params.get('rating', None)
+        return Flashcard.objects.filter(rating__gte=rating)
+
+
+class FlashCardItemView(RetrieveUpdateDestroyAPIView):
+    queryset = Flashcard.objects.all()
+    serializer_class = FlashCardSerializer
