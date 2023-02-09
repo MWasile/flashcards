@@ -8,10 +8,11 @@ from .serializers import FlashCardSerializer
 class FlashCardView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FlashCardSerializer
+    queryset = Flashcard.objects.all()
 
-    def get_queryset(self):
-        rating = self.request.query_params.get('rating', None)
-        return Flashcard.objects.filter(rating__gte=rating)
+    # def get_queryset(self):
+    #     rating = self.request.query_params.get('rating', None)
+    #     return Flashcard.objects.filter(rating__gte=rating)
 
 
 class FlashCardItemView(RetrieveUpdateDestroyAPIView):
