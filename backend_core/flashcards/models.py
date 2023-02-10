@@ -36,6 +36,7 @@ class Feature(models.Model):
     tags = models.ManyToManyField('Tag', related_name='%(class)s')
 
     is_active = models.BooleanField(default=True)
+    is_public = models.BooleanField(default=True)
 
     class Meta:
         abstract = True
