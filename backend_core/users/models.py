@@ -17,6 +17,14 @@ class CustomUserManager(BaseUserManager):
         user.save()
         return user
 
+    def create_superuser(self, email, password, **kwargs):
+        user = self.create_user(email, password, **kwargs)
+        user.is_staff = True
+        user.is_superuser = True
+        user.is_active = True
+        user.save()
+        return user
+
 
 class CustomUser(AbstractUser):
     email = models.EmailField(_("email address"), unique=True)
