@@ -5,6 +5,7 @@ from django.db import models
 class DifficultyLevel(models.Model):
     name = models.CharField(max_length=20)
     value = models.PositiveSmallIntegerField(default=0)
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='%(class)s')
 
     def __str__(self):
         return self.name
