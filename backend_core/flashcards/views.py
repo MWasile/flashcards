@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from . import models
 from . import serializers
+from .permissions import IsAuthor
 
 
 class FlashCardView(ListCreateAPIView):
@@ -18,4 +19,3 @@ class FlashCardView(ListCreateAPIView):
 class FlashCardItemView(RetrieveUpdateDestroyAPIView):
     queryset = models.Flashcard.objects.all()
     serializer_class = serializers.FlashCardSerializer
-
