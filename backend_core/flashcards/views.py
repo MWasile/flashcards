@@ -1,14 +1,14 @@
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Flashcard
-from .serializers import FlashCardSerializer
+from . import models
+from . import serializers
 
 
 class FlashCardView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = FlashCardSerializer
-    queryset = Flashcard.objects.all()
+    serializer_class = serializers.FlashCardSerializer
+    queryset = models.Flashcard.objects.all()
 
     # def get_queryset(self):
     #     rating = self.request.query_params.get('rating', None)
@@ -16,5 +16,6 @@ class FlashCardView(ListCreateAPIView):
 
 
 class FlashCardItemView(RetrieveUpdateDestroyAPIView):
-    queryset = Flashcard.objects.all()
-    serializer_class = FlashCardSerializer
+    queryset = models.Flashcard.objects.all()
+    serializer_class = serializers.FlashCardSerializer
+
