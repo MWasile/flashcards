@@ -39,3 +39,40 @@ class DeckOwnerViewSet(ViewSet):
         self.check_object_permissions(request, deck)
         serializer = serializers.DeckSerializer(deck)
         return Response(serializer.data)
+
+
+class DifficultyLevelOwnerViewSet(ModelViewSet):
+    allowed_methods = ['GET', 'POST', 'PATCH']
+    permission_classes = [IsAuthenticated, IsAuthor]
+    queryset = models.DifficultyLevel.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        levels = self.queryset.filter(author=request.user)
+        serializer = serializers.DifficultyLevelSerializer(levels, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, *args, pk=None, **kwargs):
+        level = get_object_or_404(queryset=self.queryset, pk=pk)
+        self.check_object_permissions(request, level)
+        serializer = serializers.DifficultyLevelSerializer(level)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        serializer = serializers.DifficultyLevelSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(author=request.user)
+        return Response(serializer.data)
+
+    def update(self, request, *args, pk=None, **kwargs):
+        level = get_object_or_404(queryset=self.queryset, pk=pk)
+        self.check_object_permissions(request, level)
+        serializer = serializers.DifficultyLevelSerializer(level, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def destroy(self, request, *args, pk=None, **kwargs):
+        level = get_object_or_404(queryset=self.queryset, pk=pk)
+        self.check_object_permissions(request, level)
+        level.delete()
+        return Response(status=204)

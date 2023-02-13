@@ -23,9 +23,12 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 
 class DifficultyLevelSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer(required=False)
+
     class Meta:
         model = DifficultyLevel
-        fields = ('name', 'value')
+        fields = ('id', 'name', 'author', 'value')
+
 
 class DeckSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)
