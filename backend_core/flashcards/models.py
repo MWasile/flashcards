@@ -13,13 +13,14 @@ class DifficultyLevel(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=24)
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='%(class)s')
 
     def __str__(self):
         return self.name
 
     # TODO: investigate better way to do this
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        tag = Tag.objects.filter(name=self.name.lower())
+        tag = Tag.objects.filter(name=self.name.lower(), author=self.author)
 
         self.name = self.name.lower()
 
