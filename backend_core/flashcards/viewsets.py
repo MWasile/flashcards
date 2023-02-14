@@ -71,6 +71,14 @@ class DifficultyLevelOwnerViewSet(ModelViewSet):
         serializer.save()
         return Response(serializer.data)
 
+    def partial_update(self, request, *args, pk=None, **kwargs):
+        level = get_object_or_404(queryset=self.queryset, pk=pk)
+        self.check_object_permissions(request, level)
+        serializer = serializers.DifficultyLevelSerializer(level, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
     def destroy(self, request, *args, pk=None, **kwargs):
         level = get_object_or_404(queryset=self.queryset, pk=pk)
         self.check_object_permissions(request, level)
