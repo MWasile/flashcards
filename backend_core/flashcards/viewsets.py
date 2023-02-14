@@ -84,3 +84,39 @@ class DifficultyLevelOwnerViewSet(ModelViewSet):
         self.check_object_permissions(request, level)
         level.delete()
         return Response(status=204)
+
+
+class TagOwnerViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated, IsAuthor]
+    queryset = models.Tag.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        tags = self.queryset.filter(author=request.user)
+        serializer = serializers.TagSerializer(tags, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, *args, pk=None, **kwargs):
+        tag = get_object_or_404(queryset=self.queryset, pk=pk)
+        self.check_object_permissions(request, tag)
+        serializer = serializers.TagSerializer(tag)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        serializer = serializers.TagSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(author=request.user)
+        return Response(serializer.data)
+
+    def update(self, request, *args, pk=None, **kwargs):
+        tag = get_object_or_404(queryset=self.queryset, pk=pk)
+        self.check_object_permissions(request, tag)
+        serializer = serializers.TagSerializer(tag, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def destroy(self, request, pk=None, *args, **kwargs):
+        tag = get_object_or_404(queryset=self.queryset, pk=pk)
+        self.check_object_permissions(request, tag)
+        tag.delete()
+        return Response(status=204)
