@@ -13,27 +13,27 @@ class FlashCardSerializer(serializers.ModelSerializer):
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ('name',)
+        fields = ('name', 'id')
 
 
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('email',)
+        fields = ('email', 'id')
 
 
 class DifficultyLevelSerializer(serializers.ModelSerializer):
+    id = serializers.PrimaryKeyRelatedField(read_only=True)
     author = AuthorSerializer(required=False, read_only=True)
 
     class Meta:
         model = DifficultyLevel
-        fields = ('id', 'name', 'author', 'value')
-
+        fields = ('id', 'author', 'value', 'name')
 
 class DeckSerializer(serializers.ModelSerializer):
-    tags = TagSerializer(many=True)
-    author = AuthorSerializer()
-    difficulty = DifficultyLevelSerializer()
+    tags = serializers.PrimaryKeyRelatedField(many=True, queryset=Tag.objects.all())
+    author = serializers.PrimaryKeyRelatedField(read_only=True)
+    difficulty = serializers.PrimaryKeyRelatedField(queryset=DifficultyLevel.objects.all())
 
     class Meta:
         model = Deck

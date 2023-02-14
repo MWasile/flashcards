@@ -25,24 +25,29 @@ class DeckViewSet(ModelViewSet):
         return Response(serializer.data)
 
 
-class DeckOwnerViewSet(ViewSet):
+class DeckOwnerViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, IsAuthor]
     queryset = models.Deck.objects.all()
 
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
         decks = self.queryset.filter(author=request.user)
         serializer = serializers.DeckSerializer(decks, many=True)
         return Response(serializer.data)
 
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request, pk=None, *args, **kwargs):
         deck = get_object_or_404(queryset=self.queryset, pk=pk)
         self.check_object_permissions(request, deck)
         serializer = serializers.DeckSerializer(deck)
         return Response(serializer.data)
 
+    def create(self, request, *args, **kwargs):
+        serializer = serializers.DeckSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(author=request.user)
+        return Response(serializer.data)
+
 
 class DifficultyLevelOwnerViewSet(ModelViewSet):
-    allowed_methods = ['GET', 'POST', 'PATCH']
     permission_classes = [IsAuthenticated, IsAuthor]
     queryset = models.DifficultyLevel.objects.all()
 
